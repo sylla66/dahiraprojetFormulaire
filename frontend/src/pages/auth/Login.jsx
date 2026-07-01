@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -9,10 +9,9 @@ export default function Login() {
   const { login, user } = useAuth();
   const navigate = useNavigate();
 
-  if (user) {
-    navigate(user.estSuperAdmin() ? "/super-admin" : "/");
-    return null;
-  }
+  useEffect(() => {
+    if (user) navigate(user.estSuperAdmin() ? "/super-admin" : "/");
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

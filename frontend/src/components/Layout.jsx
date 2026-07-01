@@ -101,7 +101,6 @@ export default function Layout() {
       <div className="container-fluid mt-3">
         <Outlet />
       </div>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     </div>
   );
 }
