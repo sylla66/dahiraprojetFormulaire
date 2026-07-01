@@ -40,20 +40,25 @@ export default function VueCompile() {
   if (!data) return <div className="text-center mt-5"><div className="spinner-border" /></div>;
 
   return (
-    <div>
-      <div className="card shadow mb-4">
-        <div className="card-header bg-primary text-white d-flex justify-content-between">
-          <h4 className="mb-0"><i className="bi bi-table"></i> Vue compilee</h4>
-          <button className="btn btn-light" onClick={handleExport}>
-            <i className="bi bi-download"></i> Export global
-          </button>
+    <div className="admin-page">
+      <div className="page-hero mb-4 d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div>
+          <div className="hero-pill"><i className="bi bi-table"></i> Vue globale</div>
+          <h3 className="mb-2">Vue compilée</h3>
+          <p className="text-muted mb-0">Analysez les performances globales des événements et des collectes.</p>
         </div>
-        <div className="card-body">
+        <button className="btn btn-outline-primary" onClick={handleExport}>
+          <i className="bi bi-download me-1"></i> Export global
+        </button>
+      </div>
+
+      <div className="card shadow-sm dashboard-card mb-4">
+        <div className="card-body p-4">
           <div className="row g-2 mb-3">
             <div className="col-md-6">
               <select className="form-select" value={filters.evenementId}
                 onChange={(e) => setFilters({ ...filters, evenementId: e.target.value })}>
-                <option value="">Tous les evenements</option>
+                <option value="">Tous les événements</option>
                 {allEvenements.map((e) => (
                   <option key={e.id} value={e.id}>{e.titre}</option>
                 ))}
@@ -62,37 +67,46 @@ export default function VueCompile() {
             <div className="col-md-4">
               <select className="form-select" value={filters.localiteId}
                 onChange={(e) => setFilters({ ...filters, localiteId: e.target.value })}>
-                <option value="">Toutes les localites</option>
+                <option value="">Toutes les localités</option>
                 {localites.map((l) => <option key={l.id} value={l.id}>{l.nom}</option>)}
               </select>
             </div>
             <div className="col-md-2">
-              <button className="btn btn-primary w-100" onClick={load}><i className="bi bi-funnel"></i> Filtrer</button>
+              <button className="btn btn-primary w-100" onClick={load}><i className="bi bi-funnel me-1"></i> Filtrer</button>
             </div>
           </div>
 
           <div className="row mb-4">
             <div className="col-md-4 mb-2">
-              <div className="card bg-warning text-white shadow text-center">
-                <div className="card-body"><h3>{data.grandTotal.toLocaleString()} F</h3><h6>Grand total collecte</h6></div>
+              <div className="card stat-card warning h-100">
+                <div className="card-body text-center">
+                  <div className="stat-label">Grand total collecte</div>
+                  <div className="stat-value">{data.grandTotal.toLocaleString()} F</div>
+                </div>
               </div>
             </div>
             <div className="col-md-4 mb-2">
-              <div className="card bg-info text-white shadow text-center">
-                <div className="card-body"><h3>{data.totalInscrits}</h3><h6>Total inscrits</h6></div>
+              <div className="card stat-card info h-100">
+                <div className="card-body text-center">
+                  <div className="stat-label">Total inscrits</div>
+                  <div className="stat-value">{data.totalInscrits}</div>
+                </div>
               </div>
             </div>
             <div className="col-md-4 mb-2">
-              <div className="card bg-success text-white shadow text-center">
-                <div className="card-body"><h3>{data.totalCotisants}</h3><h6>Total cotisants</h6></div>
+              <div className="card stat-card success h-100">
+                <div className="card-body text-center">
+                  <div className="stat-label">Total cotisants</div>
+                  <div className="stat-value">{data.totalCotisants}</div>
+                </div>
               </div>
             </div>
           </div>
 
           <div className="table-responsive">
-            <table className="table table-hover">
-              <thead className="table-light">
-                <tr><th>Evenement</th><th>Date</th><th>Localite</th><th>Inscrits</th><th>Cotisants</th><th>Total</th><th>Taux</th></tr>
+            <table className="table align-middle mb-0">
+              <thead>
+                <tr><th>Événement</th><th>Date</th><th>Localité</th><th>Inscrits</th><th>Cotisants</th><th>Total</th><th>Taux</th></tr>
               </thead>
               <tbody>
                 {data.donnees.map((d) => (
@@ -112,7 +126,7 @@ export default function VueCompile() {
                     </td>
                   </tr>
                 ))}
-                {data.donnees.length === 0 && <tr><td colSpan="7" className="text-center text-muted">Aucune donnee</td></tr>}
+                {data.donnees.length === 0 && <tr><td colSpan="7" className="text-center text-muted">Aucune donnée</td></tr>}
               </tbody>
             </table>
           </div>

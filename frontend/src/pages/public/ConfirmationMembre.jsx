@@ -2,28 +2,40 @@ import { Link } from "react-router-dom";
 
 export default function ConfirmationMembre() {
   return (
-    <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh", background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" }}>
-      <div className="card shadow-lg border-0" style={{ maxWidth: "500px", width: "100%", borderRadius: "15px" }}>
-        <div className="card-body text-center p-5">
-          <div className="mb-4">
-            <i className="bi bi-check-circle-fill text-success" style={{ fontSize: "4rem" }}></i>
+    <div className="public-page">
+      <div className="container">
+        <div className="row justify-content-center">
+          <div className="col-lg-7">
+            <div className="card shadow-sm dashboard-card">
+              <div className="card-body p-4 p-lg-5 text-center">
+                <div className="hero-pill mb-3"><i className="bi bi-check-circle-fill"></i> Confirmation</div>
+                <div className="mb-4">
+                  <i className="bi bi-check-circle-fill text-success" style={{ fontSize: "4rem" }}></i>
+                </div>
+                <h3 className="text-success mb-3">Adhésion confirmée !</h3>
+                <p className="mb-4 text-muted">
+                  Votre inscription a bien été prise en compte. Bienvenue dans le Dahira !
+                </p>
+
+                <div className="card bg-light border-0 text-start">
+                  <div className="card-body">
+                    <h6 className="fw-semibold"><i className="bi bi-info-circle me-2"></i> Prochaines étapes</h6>
+                    <ol className="mb-0 small text-muted">
+                      <li>Un administrateur validera votre profil.</li>
+                      <li>Vous serez informé des prochains événements.</li>
+                      <li>Vous pourrez dès à présent vous inscrire aux événements.</li>
+                    </ol>
+                  </div>
+                </div>
+
+                <div className="d-flex justify-content-center mt-4">
+                  <Link to="/login" className="btn btn-primary">
+                    <i className="bi bi-box-arrow-in-right me-2"></i> Espace administrateur
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
-          <h3 className="text-success mb-3">Adhesion confirmee !</h3>
-          <p className="mb-4">
-            Votre inscription a bien ete prise en compte. Bienvenue dans le Dahira !
-          </p>
-          <div className="alert alert-info text-start">
-            <h6><i className="bi bi-info-circle"></i> Prochaines etapes</h6>
-            <ol className="mb-0 small">
-              <li>Un administrateur validera votre profil</li>
-              <li>Vous serez informe des prochains evenements</li>
-              <li>Vous pouvez des a present vous inscrire aux evenements</li>
-            </ol>
-          </div>
-          <hr />
-          <Link to="/login" className="btn btn-primary">
-            <i className="bi bi-box-arrow-in-right"></i> Espace administrateur
-          </Link>
         </div>
       </div>
     </div>

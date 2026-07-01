@@ -35,16 +35,22 @@ export default function InscriptionMembre() {
 
   if (config && config.statut !== "ouvert") {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh", background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" }}>
-        <div className="card shadow-lg border-0 text-center" style={{ maxWidth: "500px", width: "100%", borderRadius: "15px" }}>
-          <div className="card-body p-5">
-            <i className={`bi ${config.statut === "pas_encore" ? "bi-clock" : "bi-calendar-x"} text-warning`} style={{ fontSize: "4rem" }}></i>
-            <h4 className="mt-3">{config.statut === "pas_encore" ? "Inscriptions pas encore ouvertes" : "Inscriptions terminees"}</h4>
-            <p className="text-muted">{config.message}</p>
-            <hr />
-            <Link to="/login" className="btn btn-primary">
-              <i className="bi bi-box-arrow-in-right"></i> Espace administrateur
-            </Link>
+      <div className="public-page">
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-lg-7">
+              <div className="card shadow-sm dashboard-card text-center">
+                <div className="card-body p-4 p-lg-5">
+                  <div className="hero-pill mb-3"><i className={`bi ${config.statut === "pas_encore" ? "bi-clock" : "bi-calendar-x"}`}></i> Adhésion</div>
+                  <i className={`bi ${config.statut === "pas_encore" ? "bi-clock" : "bi-calendar-x"} text-warning mb-3`} style={{ fontSize: "3rem" }}></i>
+                  <h4 className="mt-2">{config.statut === "pas_encore" ? "Inscriptions pas encore ouvertes" : "Inscriptions terminées"}</h4>
+                  <p className="text-muted">{config.message}</p>
+                  <Link to="/login" className="btn btn-primary mt-2">
+                    <i className="bi bi-box-arrow-in-right me-2"></i> Espace administrateur
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -69,76 +75,84 @@ export default function InscriptionMembre() {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "100vh", background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" }}>
-      <div className="card shadow-lg border-0" style={{ maxWidth: "560px", width: "100%", borderRadius: "15px" }}>
-        <div className="card-header bg-primary text-white text-center py-3" style={{ borderRadius: "15px 15px 0 0" }}>
-          <h4 className="mb-0"><i className="bi bi-person-plus-fill"></i> Adhesion au Dahira</h4>
-          <small>Rejoignez notre communaute</small>
+    <div className="public-page">
+      <div className="container">
+        <div className="page-hero mb-4 text-center">
+          <div className="hero-pill"><i className="bi bi-person-plus-fill"></i> Adhésion</div>
+          <h3 className="mb-2">Rejoignez le Dahira</h3>
+          <p className="text-muted mb-0">Créez votre profil membre et accédez rapidement aux inscriptions et événements.</p>
         </div>
-        <div className="card-body p-4">
-          {error && <div className="alert alert-danger">{error}</div>}
 
-          <form onSubmit={handleSubmit}>
-            <div className="row">
-              <div className="col-md-6 mb-3">
-                <label className="form-label">Nom <span className="text-danger">*</span></label>
-                <input type="text" className="form-control" name="nom" value={form.nom} onChange={handleChange} required placeholder="Votre nom" />
+        <div className="row justify-content-center">
+          <div className="col-lg-8 col-xl-7">
+            <div className="card shadow-sm dashboard-card">
+              <div className="card-body p-4 p-lg-5">
+                {error && <div className="alert alert-danger">{error}</div>}
+
+                <form onSubmit={handleSubmit}>
+                  <div className="row">
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label">Nom <span className="text-danger">*</span></label>
+                      <input type="text" className="form-control" name="nom" value={form.nom} onChange={handleChange} required placeholder="Votre nom" />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label">Prénom <span className="text-danger">*</span></label>
+                      <input type="text" className="form-control" name="prenom" value={form.prenom} onChange={handleChange} required placeholder="Votre prénom" />
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label">Téléphone <span className="text-danger">*</span></label>
+                      <input type="tel" className="form-control" name="telephone" value={form.telephone} onChange={handleChange} required placeholder="+221 77 XXX XX XX" />
+                    </div>
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label">Email</label>
+                      <input type="email" className="form-control" name="email" value={form.email} onChange={handleChange} placeholder="email@exemple.com" />
+                    </div>
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Localité</label>
+                    <select className="form-select" name="localiteId" value={form.localiteId} onChange={handleChange}>
+                      <option value="">-- Sélectionnez votre localité --</option>
+                      {localites.map((l) => <option key={l.id} value={l.id}>{l.nom} ({l.pays})</option>)}
+                    </select>
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Adresse</label>
+                    <input type="text" className="form-control" name="adresse" value={form.adresse} onChange={handleChange} placeholder="Votre adresse" />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Profession</label>
+                    <input type="text" className="form-control" name="profession" value={form.profession} onChange={handleChange} placeholder="Votre profession" />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label"><strong>Captcha - {captchaQuestion}</strong></label>
+                    <div className="input-group">
+                      <input type="number" className="form-control" placeholder="Saisissez votre réponse" value={captchaAnswer} onChange={(e) => setCaptchaAnswer(e.target.value)} required />
+                      <button type="button" className="btn btn-outline-secondary" onClick={loadCaptcha} title="Nouveau calcul">
+                        <i className="bi bi-arrow-clockwise"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <button type="submit" className="btn btn-success w-100 py-2" disabled={loading || !captchaAnswer}>
+                    <i className="bi bi-check-circle me-2"></i> {loading ? "Inscription en cours..." : "Je rejoins le Dahira"}
+                  </button>
+                </form>
+
+                <hr />
+                <p className="text-muted small text-center mb-0">
+                  <i className="bi bi-shield-lock me-1"></i> Vos données sont confidentielles.
+                  Déjà membre ? <Link to="/login">Connectez-vous</Link>
+                </p>
               </div>
-              <div className="col-md-6 mb-3">
-                <label className="form-label">Prenom <span className="text-danger">*</span></label>
-                <input type="text" className="form-control" name="prenom" value={form.prenom} onChange={handleChange} required placeholder="Votre prenom" />
-              </div>
             </div>
-
-            <div className="row">
-              <div className="col-md-6 mb-3">
-                <label className="form-label">Telephone <span className="text-danger">*</span></label>
-                <input type="tel" className="form-control" name="telephone" value={form.telephone} onChange={handleChange} required placeholder="+221 77 XXX XX XX" />
-              </div>
-              <div className="col-md-6 mb-3">
-                <label className="form-label">Email</label>
-                <input type="email" className="form-control" name="email" value={form.email} onChange={handleChange} placeholder="email@exemple.com" />
-              </div>
-            </div>
-
-            <div className="mb-3">
-              <label className="form-label">Localite</label>
-              <select className="form-select" name="localiteId" value={form.localiteId} onChange={handleChange}>
-                <option value="">-- Selectionnez votre localite --</option>
-                {localites.map((l) => <option key={l.id} value={l.id}>{l.nom} ({l.pays})</option>)}
-              </select>
-            </div>
-
-            <div className="mb-3">
-              <label className="form-label">Adresse</label>
-              <input type="text" className="form-control" name="adresse" value={form.adresse} onChange={handleChange} placeholder="Votre adresse" />
-            </div>
-
-            <div className="mb-3">
-              <label className="form-label">Profession</label>
-              <input type="text" className="form-control" name="profession" value={form.profession} onChange={handleChange} placeholder="Votre profession" />
-            </div>
-
-            <div className="mb-3">
-              <label className="form-label"><strong>Captcha - {captchaQuestion}</strong></label>
-              <div className="input-group">
-                <input type="number" className="form-control" placeholder="Saisissez votre reponse" value={captchaAnswer} onChange={(e) => setCaptchaAnswer(e.target.value)} required />
-                <button type="button" className="btn btn-outline-secondary" onClick={loadCaptcha} title="Nouveau calcul">
-                  <i className="bi bi-arrow-clockwise"></i>
-                </button>
-              </div>
-            </div>
-
-            <button type="submit" className="btn btn-success w-100 py-2" disabled={loading || !captchaAnswer}>
-              <i className="bi bi-check-circle"></i> {loading ? "Inscription en cours..." : "Je rejoins le Dahira"}
-            </button>
-          </form>
-
-          <hr />
-          <p className="text-muted small text-center mb-0">
-            <i className="bi bi-shield-lock"></i> Vos donnees sont confidentielles.
-            Deja membre ? <Link to="/login">Connectez-vous</Link>
-          </p>
+          </div>
         </div>
       </div>
     </div>

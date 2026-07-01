@@ -69,26 +69,6 @@ app.get("*", (req, res) => {
 
 (async () => {
   try {
-    const queryInterface = sequelize.getQueryInterface();
-    const table = await queryInterface.describeTable("Evenement");
-    if (!table.montantMinimum) {
-      await sequelize.query("ALTER TABLE Evenement ADD COLUMN montantMinimum INTEGER DEFAULT 0;");
-      console.log("Added column montantMinimum to Evenement");
-    } else if (table.montantMinimum.type === "FLOAT") {
-      await sequelize.query("ALTER TABLE Evenement ADD COLUMN montantMinimum_new INTEGER DEFAULT 0;");
-      await sequelize.query("UPDATE Evenement SET montantMinimum_new = CAST(montantMinimum AS INTEGER);");
-      await sequelize.query("ALTER TABLE Evenement DROP COLUMN montantMinimum;");
-      await sequelize.query("ALTER TABLE Evenement RENAME COLUMN montantMinimum_new TO montantMinimum;");
-      console.log("Converted montantMinimum from FLOAT to INTEGER");
-    }
-    if (!table.dateDebutInscription) {
-      await sequelize.query("ALTER TABLE Evenement ADD COLUMN dateDebutInscription DATETIME;");
-      console.log("Added column dateDebutInscription to Evenement");
-    }
-    if (!table.dateFinInscription) {
-      await sequelize.query("ALTER TABLE Evenement ADD COLUMN dateFinInscription DATETIME;");
-      console.log("Added column dateFinInscription to Evenement");
-    }
     await sequelize.sync({ force: false });
     console.log("Database synchronized");
     app.listen(PORT, "0.0.0.0", () => {

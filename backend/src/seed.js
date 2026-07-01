@@ -19,7 +19,11 @@ async function seed() {
         console.log("Force mode: truncating all tables...");
         const models = [PaiementCotisation, Cotisation, Inscription, TypeCotisation, Evenement, Formulaire, Membre, User, Activite, Configuration, Localite];
         for (const m of models) await m.destroy({ where: {} });
-        await sequelize.query("DELETE FROM sqlite_sequence");
+        if (process.env.DATABASE_URL) {
+          await sequelize.query("ALTER SEQUENCE \"Users_id_seq\" RESTART WITH 1");
+        } else {
+          await sequelize.query("DELETE FROM sqlite_sequence");
+        }
         console.log("All tables truncated.");
       } else {
         process.exit(0);

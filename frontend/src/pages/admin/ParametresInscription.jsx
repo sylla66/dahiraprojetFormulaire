@@ -70,67 +70,74 @@ export default function ParametresInscription() {
   }
 
   return (
-    <div className="row justify-content-center">
-      <div className="col-md-8">
-        <div className="card shadow">
-          <div className="card-header bg-primary text-white">
-            <h4 className="mb-0"><i className="bi bi-calendar-range"></i> Parametres d'inscription membres</h4>
-          </div>
-          <div className="card-body">
-            {message && <div className="alert alert-success">{message}</div>}
-            {error && <div className="alert alert-danger">{error}</div>}
+    <div className="admin-page">
+      <div className="page-hero mb-4">
+        <div>
+          <div className="hero-pill"><i className="bi bi-calendar-range"></i> Inscriptions</div>
+          <h3 className="mb-2">Paramètres d'inscription des membres</h3>
+          <p className="text-muted mb-0">Contrôlez la période d’ouverture des inscriptions et partagez facilement le lien public.</p>
+        </div>
+      </div>
 
-            <div className="card bg-light border-0 mb-4">
-              <div className="card-body py-3">
-                <div className="d-flex align-items-center justify-content-between flex-wrap gap-2">
-                  <div>
-                    <small className="text-muted">Lien public a partager</small>
-                    <div className="input-group mt-1">
-                      <input type="text" className="form-control form-control-sm bg-white" value={publicUrl} readOnly onClick={(e) => e.target.select()} />
-                      <button className="btn btn-sm btn-success" onClick={handleCopyLink}>
-                        <i className={`bi ${copied ? "bi-check-lg" : "bi-clipboard"}`}></i> {copied ? "Copie !" : "Copier"}
-                      </button>
+      <div className="row justify-content-center">
+        <div className="col-lg-9">
+          <div className="card shadow-sm dashboard-card">
+            <div className="card-body p-4 p-lg-5">
+              {message && <div className="alert alert-success">{message}</div>}
+              {error && <div className="alert alert-danger">{error}</div>}
+
+              <div className="card bg-light border-0 mb-4">
+                <div className="card-body py-3">
+                  <div className="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <div>
+                      <small className="text-muted">Lien public à partager</small>
+                      <div className="input-group mt-1">
+                        <input type="text" className="form-control form-control-sm bg-white" value={publicUrl} readOnly onClick={(e) => e.target.select()} />
+                        <button className="btn btn-sm btn-success" onClick={handleCopyLink}>
+                          <i className={`bi ${copied ? "bi-check-lg" : "bi-clipboard"}`}></i> {copied ? "Copié !" : "Copier"}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="alert alert-info d-flex align-items-center gap-2">
-              <i className="bi bi-info-circle fs-4"></i>
-              <div>
-                <strong>Statut actuel :</strong>{" "}
-                <span className={`badge ${statut === "Ouvertes" ? "bg-success" : statut === "Terminees" ? "bg-danger" : statut === "Pas encore ouvertes" ? "bg-warning" : "bg-secondary"}`}>
-                  {statut}
-                </span>
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit}>
-              <div className="row">
-                <div className="col-md-6 mb-3">
-                  <label className="form-label">Date debut d'inscription</label>
-                  <input type="datetime-local" className="form-control" name="dateDebutInscriptionMembre"
-                    value={config.dateDebutInscriptionMembre} onChange={handleChange} />
-                  <small className="text-muted">Laissez vide pour aucune restriction</small>
-                </div>
-                <div className="col-md-6 mb-3">
-                  <label className="form-label">Date fin d'inscription</label>
-                  <input type="datetime-local" className="form-control" name="dateFinInscriptionMembre"
-                    value={config.dateFinInscriptionMembre} onChange={handleChange} />
-                  <small className="text-muted">Laissez vide pour aucune restriction</small>
+              <div className="alert alert-info d-flex align-items-center gap-2">
+                <i className="bi bi-info-circle fs-4"></i>
+                <div>
+                  <strong>Statut actuel :</strong>{" "}
+                  <span className={`badge ${statut === "Ouvertes" ? "bg-success" : statut === "Terminees" ? "bg-danger" : statut === "Pas encore ouvertes" ? "bg-warning" : "bg-secondary"}`}>
+                    {statut}
+                  </span>
                 </div>
               </div>
 
-              <div className="d-flex gap-2">
-                <button type="submit" className="btn btn-primary flex-fill">
-                  <i className="bi bi-save"></i> Enregistrer
-                </button>
-                <button type="button" className="btn btn-outline-danger" onClick={handleClearDates}>
-                  <i className="bi bi-x-circle"></i> Effacer les dates
-                </button>
-              </div>
-            </form>
+              <form onSubmit={handleSubmit}>
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Date début d'inscription</label>
+                    <input type="datetime-local" className="form-control" name="dateDebutInscriptionMembre"
+                      value={config.dateDebutInscriptionMembre} onChange={handleChange} />
+                    <small className="text-muted">Laissez vide pour aucune restriction</small>
+                  </div>
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Date fin d'inscription</label>
+                    <input type="datetime-local" className="form-control" name="dateFinInscriptionMembre"
+                      value={config.dateFinInscriptionMembre} onChange={handleChange} />
+                    <small className="text-muted">Laissez vide pour aucune restriction</small>
+                  </div>
+                </div>
+
+                <div className="d-flex gap-2 flex-wrap">
+                  <button type="submit" className="btn btn-primary flex-fill">
+                    <i className="bi bi-save me-2"></i> Enregistrer
+                  </button>
+                  <button type="button" className="btn btn-outline-danger" onClick={handleClearDates}>
+                    <i className="bi bi-x-circle me-2"></i> Effacer les dates
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>

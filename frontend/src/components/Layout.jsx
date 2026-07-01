@@ -55,11 +55,12 @@ export default function Layout() {
   };
 
   return (
-    <div>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div className="container-fluid">
-          <Link className="navbar-brand" to="/">
-            <i className="bi bi-calendar-event"></i> Dahira Gestion
+    <div className="app-shell">
+      <nav className="navbar navbar-expand-lg navbar-dark app-navbar shadow-sm">
+        <div className="container-fluid px-3 px-lg-4">
+          <Link className="navbar-brand fw-semibold d-flex align-items-center gap-2" to="/">
+            <span className="brand-icon"><i className="bi bi-calendar-event"></i></span>
+            Dahira Gestion
           </Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span className="navbar-toggler-icon"></span>
@@ -166,7 +167,7 @@ export default function Layout() {
 
       {showNotifs && (
         <div className="container-fluid" style={{ maxWidth: "500px", marginLeft: "auto", marginRight: "0" }}>
-          <div className="card shadow-sm border-primary mt-1" style={{ position: "absolute", zIndex: 1050, right: 20, maxWidth: "420px" }}>
+          <div className="card shadow-sm border-primary mt-1 notification-card" style={{ position: "absolute", zIndex: 1050, right: 20, maxWidth: "420px" }}>
             <div className="card-header bg-light d-flex justify-content-between align-items-center py-2">
               <span><strong>Notifications</strong></span>
               <div>
@@ -207,7 +208,7 @@ export default function Layout() {
         </div>
       )}
 
-      <div className="container-fluid mt-3">
+      <div className="container-fluid app-content px-3 px-lg-4 py-3">
         <Outlet />
       </div>
     </div>

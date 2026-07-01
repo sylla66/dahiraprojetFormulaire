@@ -41,9 +41,13 @@ export default function SuperDashboard() {
   if (!data) return <div className="text-center mt-5"><div className="spinner-border" /></div>;
 
   return (
-    <div>
-      <div className="d-flex flex-wrap justify-content-between align-items-center mb-4">
-        <h3 className="mb-2 mb-md-0"><i className="bi bi-shield-lock"></i> Super Admin - Dashboard Global</h3>
+    <div className="admin-page">
+      <div className="page-hero mb-4 d-flex flex-wrap justify-content-between align-items-start gap-3">
+        <div>
+          <div className="hero-pill"><i className="bi bi-shield-lock"></i> Super Admin</div>
+          <h3 className="mb-2">Dashboard global</h3>
+          <p className="text-muted mb-0">Vue d’ensemble des membres, événements, utilisateurs et suivi des cotisations.</p>
+        </div>
         <div className="d-flex gap-2 flex-wrap">
           {backupInfo && (
             <span className="text-muted small align-self-center">
@@ -51,16 +55,16 @@ export default function SuperDashboard() {
             </span>
           )}
           <a className="btn btn-outline-dark" href="/api/export/membres" target="_blank" rel="noopener noreferrer">
-            <i className="bi bi-filetype-pdf"></i> PDF membres
+            <i className="bi bi-filetype-pdf me-1"></i> PDF membres
           </a>
           <a className="btn btn-outline-danger" href="/api/backup/database" target="_blank" rel="noopener noreferrer">
-            <i className="bi bi-download"></i> Backup BDD
+            <i className="bi bi-download me-1"></i> Backup BDD
           </a>
           <button className="btn btn-outline-success" onClick={() => handleSeed(false)} disabled={seeding}>
-            <i className="bi bi-database-add"></i> {seeding ? "..." : "Seed demo"}
+            <i className="bi bi-database-add me-1"></i> {seeding ? "..." : "Seed demo"}
           </button>
           <button className="btn btn-outline-warning" onClick={() => handleSeed(true)} disabled={seeding}>
-            <i className="bi bi-arrow-counterclockwise"></i> Reset + seed
+            <i className="bi bi-arrow-counterclockwise me-1"></i> Reset + seed
           </button>
         </div>
       </div>
@@ -74,34 +78,34 @@ export default function SuperDashboard() {
 
       <div className="row mb-4">
         <div className="col-md-3 mb-3">
-          <Link to="/super-admin/membres" className="card bg-primary text-white shadow text-center text-decoration-none">
+          <Link to="/super-admin/membres" className="card stat-card primary text-decoration-none h-100">
             <div className="card-body">
-              <h1 className="display-5">{data.stats.totalMembres}</h1>
-              <h5>Membres</h5>
+              <div className="stat-label">Membres</div>
+              <div className="stat-value">{data.stats.totalMembres}</div>
             </div>
           </Link>
         </div>
         <div className="col-md-3 mb-3">
-          <div className="card bg-info text-white shadow text-center">
+          <div className="card stat-card info h-100">
             <div className="card-body">
-              <h1 className="display-5">{data.stats.totalEvenements}</h1>
-              <h5>Evenements</h5>
+              <div className="stat-label">Événements</div>
+              <div className="stat-value">{data.stats.totalEvenements}</div>
             </div>
           </div>
         </div>
         <div className="col-md-3 mb-3">
-          <div className="card bg-success text-white shadow text-center">
+          <div className="card stat-card success h-100">
             <div className="card-body">
-              <h1 className="display-5">{data.stats.totalAdmins}</h1>
-              <h5>Admins actifs</h5>
+              <div className="stat-label">Admins actifs</div>
+              <div className="stat-value">{data.stats.totalAdmins}</div>
             </div>
           </div>
         </div>
         <div className="col-md-3 mb-3">
-          <div className="card bg-warning text-white shadow text-center">
+          <div className="card stat-card warning h-100">
             <div className="card-body">
-              <h1 className="display-5">{data.stats.totalCotise.toLocaleString()} F</h1>
-              <h5>Collecte evenements</h5>
+              <div className="stat-label">Collecte événements</div>
+              <div className="stat-value">{data.stats.totalCotise.toLocaleString()} F</div>
             </div>
           </div>
         </div>
@@ -109,34 +113,34 @@ export default function SuperDashboard() {
 
       <div className="row mb-4">
         <div className="col-md-3 mb-3">
-          <div className="card bg-secondary text-white shadow text-center">
-            <div className="card-body">
-              <h2>{data.stats.totalInscriptions}</h2>
-              <h5>Inscriptions evenements</h5>
+          <div className="card dashboard-card h-100">
+            <div className="card-body text-center">
+              <h2 className="mb-1">{data.stats.totalInscriptions}</h2>
+              <h6 className="text-muted mb-0">Inscriptions événements</h6>
             </div>
           </div>
         </div>
         <div className="col-md-3 mb-3">
-          <div className="card bg-dark text-white shadow text-center">
-            <div className="card-body">
-              <h2>{data.stats.totalCotisations}</h2>
-              <h5>Cotisations validees</h5>
+          <div className="card dashboard-card h-100">
+            <div className="card-body text-center">
+              <h2 className="mb-1">{data.stats.totalCotisations}</h2>
+              <h6 className="text-muted mb-0">Cotisations validées</h6>
             </div>
           </div>
         </div>
         <div className="col-md-3 mb-3">
-          <Link to="/admin/cotisations" className="card bg-success text-white shadow text-center text-decoration-none">
-            <div className="card-body">
-              <h2>{data.stats.nbPaiementsRecurrents}</h2>
-              <h5>Paiements recurrents</h5>
+          <Link to="/admin/cotisations" className="card dashboard-card h-100 text-decoration-none">
+            <div className="card-body text-center">
+              <h2 className="mb-1">{data.stats.nbPaiementsRecurrents}</h2>
+              <h6 className="text-muted mb-0">Paiements récurrents</h6>
             </div>
           </Link>
         </div>
         <div className="col-md-3 mb-3">
-          <Link to="/admin/cotisations/types" className="card bg-primary text-white shadow text-center text-decoration-none">
-            <div className="card-body">
-              <h2>{data.stats.totalTypesCotisation}</h2>
-              <h5>Types cotisation</h5>
+          <Link to="/admin/cotisations/types" className="card dashboard-card h-100 text-decoration-none">
+            <div className="card-body text-center">
+              <h2 className="mb-1">{data.stats.totalTypesCotisation}</h2>
+              <h6 className="text-muted mb-0">Types cotisation</h6>
             </div>
           </Link>
         </div>
@@ -146,13 +150,13 @@ export default function SuperDashboard() {
         <div className="row mb-4">
           {cotisationStats && cotisationStats.stats && cotisationStats.stats.length > 0 && (
             <div className="col-md-6 mb-4">
-              <div className="card shadow">
+              <div className="card dashboard-card h-100">
                 <div className="card-header bg-success text-white d-flex justify-content-between align-items-center">
-                  <h5 className="mb-0"><i className="bi bi-pie-chart"></i> Cotisations recurrentes - Detail par type</h5>
+                  <h5 className="mb-0"><i className="bi bi-pie-chart me-2"></i> Cotisations récurrentes</h5>
                   <span className="badge bg-light text-dark">{cotisationStats.grandTotal.toLocaleString()} F</span>
                 </div>
                 <div className="card-body p-0">
-                  <table className="table table-sm table-striped mb-0">
+                  <table className="table table-sm align-middle mb-0">
                     <thead>
                       <tr>
                         <th>Type</th>
@@ -176,12 +180,12 @@ export default function SuperDashboard() {
           )}
           {recents.length > 0 && (
             <div className="col-md-6 mb-4">
-              <div className="card shadow">
+              <div className="card dashboard-card h-100">
                 <div className="card-header bg-info text-white">
-                  <h5 className="mb-0"><i className="bi bi-clock-history"></i> Derniers paiements recurrents</h5>
+                  <h5 className="mb-0"><i className="bi bi-clock-history me-2"></i> Derniers paiements récurrents</h5>
                 </div>
                 <div className="card-body p-0">
-                  <table className="table table-sm table-striped mb-0">
+                  <table className="table table-sm align-middle mb-0">
                     <thead>
                       <tr>
                         <th>Membre</th>
@@ -210,10 +214,10 @@ export default function SuperDashboard() {
 
       <div className="row">
         <div className="col-md-6 mb-4">
-          <div className="card shadow">
+          <div className="card dashboard-card h-100">
             <div className="card-header bg-info text-white d-flex justify-content-between align-items-center">
-              <h5 className="mb-0"><i className="bi bi-calendar2-event"></i> Derniers evenements</h5>
-              <Link to="/super-admin/compile" className="btn btn-sm btn-light">Vue compilee</Link>
+              <h5 className="mb-0"><i className="bi bi-calendar2-event me-2"></i> Derniers événements</h5>
+              <Link to="/super-admin/compile" className="btn btn-sm btn-light">Vue compilée</Link>
             </div>
             <div className="card-body">
               <ul className="list-group">
@@ -233,10 +237,10 @@ export default function SuperDashboard() {
           </div>
         </div>
         <div className="col-md-6 mb-4">
-          <div className="card shadow">
+          <div className="card dashboard-card h-100">
             <div className="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-              <h5 className="mb-0"><i className="bi bi-people"></i> Administrateurs</h5>
-              <Link to="/super-admin/utilisateurs" className="btn btn-sm btn-light">Gerer</Link>
+              <h5 className="mb-0"><i className="bi bi-people me-2"></i> Administrateurs</h5>
+              <Link to="/super-admin/utilisateurs" className="btn btn-sm btn-light">Gérer</Link>
             </div>
             <div className="card-body">
               <ul className="list-group">
@@ -257,35 +261,35 @@ export default function SuperDashboard() {
 
       <div className="row">
         <div className="col-12 mb-4">
-          <div className="card shadow">
+          <div className="card dashboard-card">
             <div className="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-              <h5 className="mb-0"><i className="bi bi-boxes"></i> Acces rapide</h5>
+              <h5 className="mb-0"><i className="bi bi-boxes me-2"></i> Accès rapide</h5>
             </div>
             <div className="card-body">
               <div className="row g-2">
                 <div className="col-md-3 col-6">
-                  <Link to="/super-admin" className="btn btn-outline-primary w-100"><i className="bi bi-speedometer2"></i> Dashboard</Link>
+                  <Link to="/super-admin" className="btn btn-outline-primary w-100"><i className="bi bi-speedometer2 me-1"></i> Dashboard</Link>
                 </div>
                 <div className="col-md-3 col-6">
-                  <Link to="/super-admin/membres" className="btn btn-outline-primary w-100"><i className="bi bi-people"></i> Membres</Link>
+                  <Link to="/super-admin/membres" className="btn btn-outline-primary w-100"><i className="bi bi-people me-1"></i> Membres</Link>
                 </div>
                 <div className="col-md-3 col-6">
-                  <Link to="/super-admin/utilisateurs" className="btn btn-outline-primary w-100"><i className="bi bi-person-gear"></i> Utilisateurs</Link>
+                  <Link to="/super-admin/utilisateurs" className="btn btn-outline-primary w-100"><i className="bi bi-person-gear me-1"></i> Utilisateurs</Link>
                 </div>
                 <div className="col-md-3 col-6">
-                  <Link to="/super-admin/compile" className="btn btn-outline-primary w-100"><i className="bi bi-table"></i> Compile</Link>
+                  <Link to="/super-admin/compile" className="btn btn-outline-primary w-100"><i className="bi bi-table me-1"></i> Compile</Link>
                 </div>
                 <div className="col-md-3 col-6">
-                  <Link to="/super-admin/localites" className="btn btn-outline-primary w-100"><i className="bi bi-geo-alt"></i> Localites</Link>
+                  <Link to="/super-admin/localites" className="btn btn-outline-primary w-100"><i className="bi bi-geo-alt me-1"></i> Localités</Link>
                 </div>
                 <div className="col-md-3 col-6">
-                  <Link to="/super-admin/activites" className="btn btn-outline-primary w-100"><i className="bi bi-activity"></i> Activites</Link>
+                  <Link to="/super-admin/activites" className="btn btn-outline-primary w-100"><i className="bi bi-activity me-1"></i> Activités</Link>
                 </div>
                 <div className="col-md-3 col-6">
-                  <Link to="/admin/cotisations" className="btn btn-outline-success w-100"><i className="bi bi-cash-stack"></i> Cotisations</Link>
+                  <Link to="/admin/cotisations" className="btn btn-outline-success w-100"><i className="bi bi-cash-stack me-1"></i> Cotisations</Link>
                 </div>
                 <div className="col-md-3 col-6">
-                  <Link to="/admin/cotisations/types" className="btn btn-outline-success w-100"><i className="bi bi-tags"></i> Types cotisation</Link>
+                  <Link to="/admin/cotisations/types" className="btn btn-outline-success w-100"><i className="bi bi-tags me-1"></i> Types cotisation</Link>
                 </div>
               </div>
             </div>
