@@ -8,7 +8,9 @@
     "dev:frontend": "cd frontend && npm run dev",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "seed": "cd backend && npm run seed",
-    "build": "cd frontend && npm run build"
+    "build": "cd frontend && npm run build",
+    "start": "node backend/src/server.js",
+    "postinstall": "npm run build"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
