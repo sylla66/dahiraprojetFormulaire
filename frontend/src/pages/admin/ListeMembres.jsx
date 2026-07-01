@@ -32,9 +32,14 @@ export default function ListeMembres() {
     <div className="card shadow">
       <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
         <h4 className="mb-0"><i className="bi bi-people"></i> Gestion des membres</h4>
-        <Link to="/admin/membres/ajouter" className="btn btn-light">
-          <i className="bi bi-person-plus"></i> Ajouter
-        </Link>
+        <div className="d-flex gap-2">
+          <a className="btn btn-light" href="/api/export/membres" target="_blank" rel="noopener noreferrer">
+            <i className="bi bi-filetype-pdf"></i> PDF
+          </a>
+          <Link to="/admin/membres/ajouter" className="btn btn-light">
+            <i className="bi bi-person-plus"></i> Ajouter
+          </Link>
+        </div>
       </div>
       <div className="card-body">
         <div className="row g-2 mb-3">

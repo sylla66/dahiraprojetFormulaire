@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
 export default function Login() {
@@ -54,6 +54,12 @@ export default function Login() {
                   <i className="bi bi-box-arrow-in-right"></i> Se connecter
                 </button>
               </form>
+              <hr />
+              <div className="text-center">
+                <Link to="/inscription-membre" className="btn btn-outline-success btn-sm w-100">
+                  <i className="bi bi-person-plus"></i> Devenir membre du Dahira
+                </Link>
+              </div>
             </div>
           </div>
         </div>

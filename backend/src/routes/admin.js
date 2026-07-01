@@ -1,6 +1,7 @@
 const express = require("express");
 const { Op } = require("sequelize");
-const { Membre, Localite, Evenement, Cotisation, Inscription, Formulaire, Activite } = require("../models");
+const sequelize = require("../config/database");
+const { Membre, Localite, Evenement, Cotisation, Inscription, Formulaire, Activite, Configuration } = require("../models");
 const { auth, adminRequired } = require("../middleware/auth");
 
 const router = express.Router();
@@ -82,6 +83,12 @@ router.get("/evenements", auth, adminRequired, async (req, res) => {
         { model: Localite, as: "localiteRef" },
         { model: User, as: "organisateur", attributes: ["id", "nom", "prenom"] },
       ],
+      attributes: {
+        include: [
+          [sequelize.literal(`(SELECT COUNT(*) FROM Inscription WHERE Inscription.evenementId = Evenement.id)`), "inscriptionCount"],
+          [sequelize.literal(`(SELECT COUNT(*) FROM Cotisation WHERE Cotisation.evenementId = Evenement.id)`), "cotisationCount"],
+        ],
+      },
       order: [["dateEvenement", "DESC"]],
     });
     res.json(evenements);
@@ -97,6 +104,20 @@ router.post("/evenements", auth, adminRequired, async (req, res) => {
       userId: req.user.id, action: "Creation evenement", details: evenement.titre,
     });
     res.status(201).json(evenement);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.put("/evenements/:id", auth, adminRequired, async (req, res) => {
+  try {
+    const evenement = await Evenement.findByPk(req.params.id);
+    if (!evenement) return res.status(404).json({ error: "Evenement introuvable" });
+    await evenement.update(req.body);
+    await Activite.create({
+      userId: req.user.id, action: "Modification evenement", details: evenement.titre,
+    });
+    res.json(evenement);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -210,6 +231,32 @@ router.get("/historique", auth, adminRequired, async (req, res) => {
       limit: 100,
     });
     res.json(activites);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get("/config", auth, adminRequired, async (req, res) => {
+  try {
+    const configs = await Configuration.findAll();
+    const obj = {};
+    configs.forEach((c) => { obj[c.cle] = c.valeur; });
+    res.json(obj);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.put("/config", auth, adminRequired, async (req, res) => {
+  try {
+    const entries = req.body;
+    for (const [cle, valeur] of Object.entries(entries)) {
+      await Configuration.upsert({ cle, valeur });
+    }
+    await Activite.create({
+      userId: req.user.id, action: "Modification configuration", details: "Dates inscription membres",
+    });
+    res.json({ message: "Configuration mise a jour" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

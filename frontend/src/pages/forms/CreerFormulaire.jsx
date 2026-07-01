@@ -6,6 +6,7 @@ export default function CreerFormulaire() {
   const [form, setForm] = useState({ titre: "", description: "", typeEvenement: "cotisation", localiteId: "" });
   const [localites, setLocalites] = useState([]);
   const [champs, setChamps] = useState([]);
+  const [showPreview, setShowPreview] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -127,13 +128,63 @@ export default function CreerFormulaire() {
                 </div>
               ))}
 
-              <button type="submit" className="btn btn-primary w-100 mt-3">
-                <i className="bi bi-save"></i> Creer le formulaire
-              </button>
+              <div className="d-flex gap-2 mt-3">
+                <button type="button" className="btn btn-outline-info flex-fill" onClick={() => setShowPreview(true)} disabled={champs.filter((c) => c.nom && c.label).length === 0}>
+                  <i className="bi bi-eye"></i> Apercu
+                </button>
+                <button type="submit" className="btn btn-primary flex-fill">
+                  <i className="bi bi-save"></i> Creer le formulaire
+                </button>
+              </div>
             </form>
           </div>
         </div>
       </div>
+
+      {showPreview && (
+        <div className="modal d-block" tabIndex="-1" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header bg-light">
+                <h5 className="modal-title"><i className="bi bi-eye"></i> Apercu du formulaire</h5>
+                <button type="button" className="btn-close" onClick={() => setShowPreview(false)}></button>
+              </div>
+              <div className="modal-body">
+                <div className="card border-primary">
+                  <div className="card-header bg-primary text-white">
+                    <h5 className="mb-0">{form.titre || "Titre du formulaire"}</h5>
+                  </div>
+                  <div className="card-body">
+                    {form.description && <p className="text-muted small">{form.description}</p>}
+                    {champs.filter((c) => c.nom && c.label).map((c, i) => (
+                      <div className="mb-3" key={i}>
+                        <label className="form-label">
+                          {c.label} {c.requis && <span className="text-danger">*</span>}
+                        </label>
+                        {c.type === "textarea" ? (
+                          <textarea className="form-control" rows="3" disabled placeholder={c.label} />
+                        ) : c.type === "select" ? (
+                          <select className="form-select" disabled>
+                            <option value="">-- {c.label} --</option>
+                          </select>
+                        ) : c.type === "date" ? (
+                          <input type="date" className="form-control" disabled />
+                        ) : (
+                          <input type={c.type} className="form-control" disabled placeholder={c.label} />
+                        )}
+                        <small className="text-muted">Type: {c.type}</small>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button className="btn btn-secondary" onClick={() => setShowPreview(false)}>Fermer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

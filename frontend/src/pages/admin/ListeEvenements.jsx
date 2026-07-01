@@ -21,7 +21,7 @@ export default function ListeEvenements() {
         <div className="table-responsive">
           <table className="table table-hover">
             <thead className="table-light">
-              <tr><th>Titre</th><th>Date</th><th>Lieu</th><th>Formulaire</th><th>Statut</th><th>Actions</th></tr>
+              <tr><th>Titre</th><th>Date</th><th>Lieu</th><th>Inscrits</th><th>Statut</th><th>Actions</th></tr>
             </thead>
             <tbody>
               {evenements.map((e) => (
@@ -29,14 +29,20 @@ export default function ListeEvenements() {
                   <td>{e.titre}</td>
                   <td>{new Date(e.dateEvenement).toLocaleDateString("fr-FR")}</td>
                   <td>{e.lieu || "-"}</td>
-                  <td>{e.formulaireRef?.titre || "-"}</td>
+                  <td>
+                    <span className="badge bg-info">{e.inscriptionCount || 0}</span>
+                    <small className="text-muted ms-1">/{e.cotisationCount || 0} cot.</small>
+                  </td>
                   <td>{e.estCloture ? <span className="badge bg-secondary">Clos</span> : <span className="badge bg-success">Actif</span>}</td>
                   <td>
-                    <Link to={`/dashboard/evenement/${e.id}`} className="btn btn-sm btn-info me-1">
+                    <Link to={`/dashboard/evenement/${e.id}`} className="btn btn-sm btn-info me-1" title="Dashboard">
                       <i className="bi bi-eye"></i>
                     </Link>
-                    <Link to={`/admin/evenements/${e.id}/gerer`} className="btn btn-sm btn-primary">
-                      <i className="bi bi-gear"></i> Gerer
+                    <Link to={`/admin/evenements/${e.id}/gerer`} className="btn btn-sm btn-primary me-1" title="Gerer">
+                      <i className="bi bi-gear"></i>
+                    </Link>
+                    <Link to={`/admin/evenements/${e.id}/modifier`} className="btn btn-sm btn-warning me-1" title="Modifier">
+                      <i className="bi bi-pencil"></i>
                     </Link>
                   </td>
                 </tr>

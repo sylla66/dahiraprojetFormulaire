@@ -37,6 +37,7 @@ export const admin = {
   deleteMembre: (id) => api.delete(`/admin/membres/${id}`),
   getEvenements: () => api.get("/admin/evenements"),
   createEvenement: (data) => api.post("/admin/evenements", data),
+  updateEvenement: (id, data) => api.put(`/admin/evenements/${id}`, data),
   getEvenement: (id) => api.get(`/admin/evenements/${id}`),
   inscrire: (id, data) => api.post(`/admin/evenements/${id}/inscrire`, data),
   cotisation: (id, data) => api.post(`/admin/evenements/${id}/cotisation`, data),
@@ -44,6 +45,8 @@ export const admin = {
   deleteCotisation: (id) => api.delete(`/admin/cotisations/${id}`),
   deleteInscription: (id) => api.delete(`/admin/inscriptions/${id}`),
   getHistorique: () => api.get("/admin/historique"),
+  getConfig: () => api.get("/admin/config"),
+  updateConfig: (data) => api.put("/admin/config", data),
 };
 
 export const forms = {
@@ -60,6 +63,13 @@ export const dashboard = {
   exportData: (evenementId, type) => api.get(`/dashboard/export/${evenementId}/${type}`),
 };
 
+export const notifs = {
+  getAll: (params) => api.get("/notifications", { params }),
+  nonLues: () => api.get("/notifications/non-lues"),
+  lire: (id) => api.put(`/notifications/${id}/lire`),
+  lireToutes: () => api.put("/notifications/lire-toutes"),
+};
+
 export const superAdmin = {
   getDashboard: () => api.get("/super-admin/dashboard"),
   getUtilisateurs: () => api.get("/super-admin/utilisateurs"),
@@ -71,6 +81,25 @@ export const superAdmin = {
   deleteLocalite: (id) => api.delete(`/super-admin/localites/${id}`),
   getActivites: (params) => api.get("/super-admin/activites", { params }),
   exportGlobal: () => api.get("/super-admin/export"),
+  getMembresGlobal: () => api.get("/super-admin/membres"),
+  deleteMembreGlobal: (id) => api.delete(`/super-admin/membres/${id}`),
+  getStatsCotisations: () => api.get("/super-admin/stats/cotisations-recurrentes"),
+  seed: (force) => api.post(`/super-admin/seed${force ? "?force=true" : ""}`),
+  createUser: (data) => api.post("/auth/register", data),
+  updateUserRole: (id, role) => api.put(`/super-admin/utilisateurs/${id}/role`, { role }),
+};
+
+export const cotisations = {
+  getTypes: () => api.get("/cotisations/types"),
+  createType: (data) => api.post("/cotisations/types", data),
+  updateType: (id, data) => api.put(`/cotisations/types/${id}`, data),
+  deleteType: (id) => api.delete(`/cotisations/types/${id}`),
+  getPaiements: (typeId) => api.get(`/cotisations/types/${typeId}/paiements`),
+  createPaiement: (data) => api.post("/cotisations/paiements", data),
+  deletePaiement: (id) => api.delete(`/cotisations/paiements/${id}`),
+  getPaiementsMembre: (membreId) => api.get(`/cotisations/membres/${membreId}/paiements`),
+  getRecents: () => api.get("/cotisations/paiements/recents"),
+  getStats: () => api.get("/cotisations/stats"),
 };
 
 export default api;

@@ -6,6 +6,10 @@ const Evenement = require("./Evenement");
 const Cotisation = require("./Cotisation");
 const Inscription = require("./Inscription");
 const Activite = require("./Activite");
+const Notification = require("./Notification");
+const Configuration = require("./Configuration");
+const TypeCotisation = require("./TypeCotisation");
+const PaiementCotisation = require("./PaiementCotisation");
 
 Localite.hasMany(Membre, { foreignKey: "localiteId" });
 Membre.belongsTo(Localite, { foreignKey: "localiteId", as: "localiteRef" });
@@ -43,7 +47,20 @@ Inscription.belongsTo(Membre, { foreignKey: "membreId", as: "membreRef" });
 User.hasMany(Cotisation, { foreignKey: "confirmePar", as: "validations" });
 Cotisation.belongsTo(User, { foreignKey: "confirmePar", as: "valideur" });
 
+TypeCotisation.hasMany(PaiementCotisation, { foreignKey: "typeCotisationId", as: "paiements" });
+PaiementCotisation.belongsTo(TypeCotisation, { foreignKey: "typeCotisationId", as: "typeRef" });
+
+Membre.hasMany(PaiementCotisation, { foreignKey: "membreId" });
+PaiementCotisation.belongsTo(Membre, { foreignKey: "membreId", as: "membreRef" });
+
+User.hasMany(PaiementCotisation, { foreignKey: "confirmePar", as: "validationsPaiement" });
+PaiementCotisation.belongsTo(User, { foreignKey: "confirmePar", as: "valideur" });
+
+User.hasMany(TypeCotisation, { foreignKey: "userId", as: "typesCotisation" });
+TypeCotisation.belongsTo(User, { foreignKey: "userId", as: "createur" });
+
 module.exports = {
   User, Localite, Membre, Formulaire,
-  Evenement, Cotisation, Inscription, Activite,
+  Evenement, Cotisation, Inscription, Activite, Notification, Configuration,
+  TypeCotisation, PaiementCotisation,
 };

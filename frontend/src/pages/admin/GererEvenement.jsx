@@ -47,6 +47,15 @@ export default function GererEvenement() {
     load();
   };
 
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = () => {
+    const link = `${window.location.origin}/inscription-evenement/${id}`;
+    navigator.clipboard.writeText(link);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   if (!data) return <div className="text-center mt-5"><div className="spinner-border" /></div>;
 
   const inscritsIds = data.inscriptions.map((i) => i.membreId);
@@ -56,13 +65,51 @@ export default function GererEvenement() {
   return (
     <div>
       <div className="card shadow mb-4">
-        <div className="card-header bg-primary text-white d-flex justify-content-between">
+        <div className="card-header bg-primary text-white d-flex flex-wrap justify-content-between align-items-center gap-2">
           <h4 className="mb-0"><i className="bi bi-gear"></i> Gestion: {data.evenement.titre}</h4>
-          {!data.evenement.estCloture && (
-            <button className="btn btn-warning" onClick={handleCloturer}>
-              <i className="bi bi-lock"></i> Cloturer
+          <div className="d-flex gap-2">
+            <a className="btn btn-light" href={`/api/export/evenements/${id}/inscrits`} target="_blank" rel="noopener noreferrer">
+              <i className="bi bi-filetype-pdf"></i> PDF inscrits
+            </a>
+            <button className="btn btn-light" onClick={handleShare}>
+              <i className="bi bi-share"></i> {copied ? "Copie !" : "Lien inscription"}
             </button>
-          )}
+            {!data.evenement.estCloture && (
+              <button className="btn btn-warning" onClick={handleCloturer}>
+                <i className="bi bi-lock"></i> Cloturer
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="card-body py-2 bg-light">
+          <div className="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div>
+              <span className="text-muted small">Objectif de collecte</span>
+              <h3 className="mb-0 fw-bold text-primary">
+                {data.evenement.montantObjectif > 0 ? `${data.evenement.montantObjectif.toLocaleString()} FCFA` : "Non defini"}
+              </h3>
+            </div>
+            <div className="text-end">
+              <span className="text-muted small">Collecte</span>
+              <h4 className="mb-0 text-success">{data.cotisations.reduce((s, c) => s + parseFloat(c.montant || 0), 0).toLocaleString()} F</h4>
+            </div>
+            {data.evenement.montantObjectif > 0 && (
+              <div className="w-100 mt-1">
+                <div className="progress" style={{ height: "8px" }}>
+                  <div className="progress-bar bg-success" role="progressbar"
+                       style={{ width: `${Math.min(Math.round((data.cotisations.reduce((s, c) => s + parseFloat(c.montant || 0), 0) / data.evenement.montantObjectif) * 100), 100)}%` }}>
+                  </div>
+                </div>
+              </div>
+            )}
+            {data.evenement.montantMinimum > 0 && (
+              <div className="w-100 mt-1">
+                <small className="text-muted">
+                  Minimum par personne: <strong className="text-danger">{Number(data.evenement.montantMinimum).toLocaleString()} F</strong>
+                </small>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

@@ -1,132 +1,156 @@
 require("dotenv").config();
 const sequelize = require("./config/database");
-const models = require("./models/index");
-const bcrypt = require("bcryptjs");
-
-const { User, Localite, Membre, Formulaire, Evenement, Cotisation, Inscription, Activite } = models;
+require("./models/index");
+const {
+  User, Localite, Membre, Evenement, Formulaire,
+  Cotisation, Inscription, Activite, Configuration,
+  TypeCotisation, PaiementCotisation,
+} = require("./models");
 
 async function seed() {
   try {
-    await sequelize.sync({ force: true });
-    console.log("Database recreated");
+    await sequelize.sync({ force: false });
+    console.log("Database synced");
 
-    const superAdmin = await User.create({
-      username: "superadmin",
-      email: "superadmin@dahira.com",
-      password: "admin123",
-      nom: "DIOP",
-      prenom: "Super",
-      role: "super_admin",
-      telephone: "+221 77 000 00 00",
-      localite: "Dakar",
-      isActive: true,
-    });
-    console.log("Super admin created: superadmin / admin123");
-
-    await User.create({
-      username: "admin1",
-      email: "admin1@dahira.com",
-      password: "admin123",
-      nom: "FALL",
-      prenom: "Admin",
-      role: "admin",
-      telephone: "+221 77 111 11 11",
-      localite: "Rufisque",
-      isActive: true,
-    });
-    console.log("Admin created: admin1 / admin123");
+    const existing = await User.count();
+    if (existing > 0) {
+      console.log("Database contains data already. Use force=true to reset.");
+      if (process.argv.includes("force")) {
+        console.log("Force mode: truncating all tables...");
+        const models = [PaiementCotisation, Cotisation, Inscription, TypeCotisation, Evenement, Formulaire, Membre, User, Activite, Configuration, Localite];
+        for (const m of models) await m.destroy({ where: {} });
+        await sequelize.query("DELETE FROM sqlite_sequence");
+        console.log("All tables truncated.");
+      } else {
+        process.exit(0);
+      }
+    }
 
     const localites = await Localite.bulkCreate([
       { nom: "Dakar", pays: "Senegal" },
-      { nom: "Rufisque", pays: "Senegal" },
       { nom: "Thies", pays: "Senegal" },
       { nom: "Saint-Louis", pays: "Senegal" },
-      { nom: "Paris", pays: "France" },
-      { nom: "Marseille", pays: "France" },
-      { nom: "Lyon", pays: "France" },
-      { nom: "Bordeaux", pays: "France" },
+      { nom: "Touba", pays: "Senegal" },
+      { nom: "Kaolack", pays: "Senegal" },
+      { nom: "Ziguinchor", pays: "Senegal" },
     ]);
-    console.log(`${localites.length} localites created`);
+    console.log(`Created ${localites.length} localites`);
+
+    const superAdmin = await User.create({
+      username: "superadmin", email: "super@dahira.sn",
+      password: "admin123", role: "super_admin",
+      nom: "Diop", prenom: "Super", telephone: "771234500",
+      localite: "Dakar", isActive: true,
+    });
+    const admin1 = await User.create({
+      username: "admin1", email: "admin1@dahira.sn",
+      password: "admin123", role: "admin",
+      nom: "Fall", prenom: "Admin", telephone: "771234501",
+      localite: "Thies", isActive: true,
+    });
+    const admin2 = await User.create({
+      username: "admin2", email: "admin2@dahira.sn",
+      password: "admin123", role: "admin",
+      nom: "Sy", prenom: "Modou", telephone: "771234502",
+      localite: "Saint-Louis", isActive: true,
+    });
+    console.log("Created 3 users (superadmin, admin1, admin2)");
 
     const membres = await Membre.bulkCreate([
-      { nom: "NDIAYE", prenom: "Mamadou", telephone: "+221 77 123 45 67", email: "mamadou@email.com", localiteId: 1, profession: "Enseignant" },
-      { nom: "DIALLO", prenom: "Aissatou", telephone: "+221 77 234 56 78", email: "aissatou@email.com", localiteId: 1, profession: "Medecin" },
-      { nom: "SOW", prenom: "Ousmane", telephone: "+221 77 345 67 89", localiteId: 2, profession: "Commercant" },
-      { nom: "BA", prenom: "Fatou", telephone: "+221 77 456 78 90", email: "fatou@email.com", localiteId: 2, profession: "Fonctionnaire" },
-      { nom: "THIAM", prenom: "Modou", telephone: "+221 77 567 89 01", localiteId: 3, profession: "Etudiant" },
-      { nom: "GUEYE", prenom: "Sokhna", telephone: "+221 77 678 90 12", email: "sokhna@email.com", localiteId: 5, profession: "Infirmiere" },
-      { nom: "FALL", prenom: "Cheikh", telephone: "+221 77 789 01 23", localiteId: 5, profession: "Ingenieur" },
-      { nom: "DIOP", prenom: "Aminata", telephone: "+221 77 890 12 34", localiteId: 1, profession: "Avocate" },
+      { nom: "Sow", prenom: "Aminata", telephone: "771111111", email: "amina@ex.sn", localiteId: 1, profession: "Enseignante", dateNaissance: "1990-05-12" },
+      { nom: "Gueye", prenom: "Mamadou", telephone: "771111112", email: "mgueye@ex.sn", localiteId: 1, profession: "Commercant", dateNaissance: "1985-08-22" },
+      { nom: "Ndiaye", prenom: "Fatou", telephone: "771111113", email: "fndiaye@ex.sn", localiteId: 2, profession: "Infirmiere", dateNaissance: "1992-11-03" },
+      { nom: "Dieng", prenom: "Oumar", telephone: "771111114", email: "odieng@ex.sn", localiteId: 2, profession: "Fonctionnaire", dateNaissance: "1988-02-15" },
+      { nom: "Ba", prenom: "Marieme", telephone: "771111115", email: "mba@ex.sn", localiteId: 3, profession: "Etudiante", dateNaissance: "1998-07-30" },
+      { nom: "Kane", prenom: "El Hadji", telephone: "771111116", email: "ekane@ex.sn", localiteId: 3, profession: "Transporteur", dateNaissance: "1980-12-10" },
+      { nom: "Thiam", prenom: "Aissatou", telephone: "771111117", email: "athiam@ex.sn", localiteId: 4, profession: "Coiffeuse", dateNaissance: "1995-04-18" },
+      { nom: "Sall", prenom: "Moustapha", telephone: "771111118", email: "msall@ex.sn", localiteId: 4, profession: "Mecanicien", dateNaissance: "1983-09-25" },
+      { nom: "Faye", prenom: "Ndeye", telephone: "771111119", email: "nfaye@ex.sn", localiteId: 5, profession: "Secretaire", dateNaissance: "1993-01-08" },
+      { nom: "Camara", prenom: "Boubacar", telephone: "771111120", email: "bcamara@ex.sn", localiteId: 5, profession: "Agriculteur", dateNaissance: "1987-06-14" },
     ]);
-    console.log(`${membres.length} membres created`);
+    console.log(`Created ${membres.length} membres`);
 
-    const formulaire = await Formulaire.create({
-      titre: "Cotisation Ramadan 2026",
-      description: "Formulaire de cotisation pour le mois de Ramadan",
-      typeEvenement: "cotisation",
+    const form1 = await Formulaire.create({
+      titre: "Formulaire evenement standard", description: "Formulaire par defaut",
+      typeEvenement: "cotisation", estActif: true,
       champsJson: JSON.stringify([
-        { nom: "montant", type: "number", label: "Montant cotisation", requis: true },
-        { nom: "mois", type: "text", label: "Mois", requis: true },
+        { nom: "nom", type: "text", label: "Nom", requis: true },
+        { nom: "telephone", type: "tel", label: "Telephone", requis: true },
       ]),
-      userId: 1,
-      localiteId: 1,
+      userId: admin1.id, localiteId: 1,
     });
-
-    const formulaire2 = await Formulaire.create({
-      titre: "Recensement Dahira",
-      description: "Recensement general des membres du Dahira",
-      typeEvenement: "recensement",
+    const form2 = await Formulaire.create({
+      titre: "Formulaire gala", description: "Pour les galas et diners",
+      typeEvenement: "gala", estActif: true,
       champsJson: JSON.stringify([
-        { nom: "profession", type: "text", label: "Profession", requis: true },
-        { nom: "disponibilite", type: "text", label: "Disponibilite", requis: false },
-        { nom: "competences", type: "textarea", label: "Competences", requis: false },
+        { nom: "nom", type: "text", label: "Nom complet", requis: true },
+        { nom: "telephone", type: "tel", label: "Telephone", requis: true },
+        { nom: "nombrePlaces", type: "number", label: "Nombre de places", requis: true },
       ]),
-      userId: 1,
-      localiteId: 1,
+      userId: admin1.id, localiteId: 2,
     });
-    console.log("Formulaires created");
+    console.log(`Created ${2} formulaires`);
 
     const now = new Date();
-    const evenement = await Evenement.create({
-      titre: "Collecte Ramadan 2026",
-      description: "Collecte de fonds pour le programme du Ramadan",
-      dateEvenement: new Date(now.getFullYear(), now.getMonth(), 15),
-      dateFin: new Date(now.getFullYear(), now.getMonth(), 20),
-      lieu: "Dakar Plateau",
-      formulaireId: 1,
-      userId: 1,
-      localiteId: 1,
-      montantObjectif: 500000,
-    });
-
-    await Inscription.bulkCreate([
-      { evenementId: 1, membreId: 1, donneesJson: JSON.stringify({ montant: "25000", mois: "Mars" }) },
-      { evenementId: 1, membreId: 2, donneesJson: JSON.stringify({ montant: "30000", mois: "Mars" }) },
-      { evenementId: 1, membreId: 3, donneesJson: JSON.stringify({ montant: "15000", mois: "Mars" }) },
-      { evenementId: 1, membreId: 4, donneesJson: JSON.stringify({ montant: "20000", mois: "Mars" }) },
-      { evenementId: 1, membreId: 5, donneesJson: JSON.stringify({ montant: "10000", mois: "Mars" }) },
+    const evenements = await Evenement.bulkCreate([
+      { titre: "Ziarra annuelle 2026", description: "Grande ziarra annuelle du dahira", dateEvenement: new Date("2026-12-15"), dateFin: new Date("2026-12-16"), dateDebutInscription: new Date("2026-01-01"), dateFinInscription: new Date("2026-12-10"), lieu: "Dakar Plateau", montantObjectif: 5000000, montantMinimum: 5000, formulaireId: form1.id, userId: admin1.id, localiteId: 1 },
+      { titre: "Gala de bienfaisance", description: "Soiree gala pour collecte de fonds", dateEvenement: new Date("2026-11-20"), dateFin: new Date("2026-11-20"), dateDebutInscription: new Date("2026-01-01"), dateFinInscription: new Date("2026-11-15"), lieu: "Salle des fetes Thies", montantObjectif: 2000000, montantMinimum: 10000, formulaireId: form2.id, userId: admin2.id, localiteId: 2 },
+      { titre: "Causerie religieuse", description: "Conference sur le mouridisme", dateEvenement: new Date("2026-10-05"), lieu: "Daara Saint-Louis", montantObjectif: 500000, montantMinimum: 2000, formulaireId: form1.id, userId: admin2.id, localiteId: 3 },
+      { titre: "Khadimou Rassoul 2026", description: "Celebration du gamou", dateEvenement: new Date("2026-09-15"), dateFin: new Date("2026-09-17"), lieu: "Touba", montantObjectif: 10000000, montantMinimum: 10000, formulaireId: form1.id, userId: admin1.id, localiteId: 4 },
     ]);
-    console.log("Inscriptions created");
+    console.log(`Created ${evenements.length} evenements`);
 
-    await Cotisation.bulkCreate([
-      { evenementId: 1, membreId: 1, montant: 25000, confirmePar: 1 },
-      { evenementId: 1, membreId: 2, montant: 30000, confirmePar: 1 },
-      { evenementId: 1, membreId: 3, montant: 15000, confirmePar: 1 },
+    const cotisationsData = [];
+    for (let i = 0; i < 10; i++) {
+      cotisationsData.push({ montant: 5000 + i * 1000, evenementId: 1, membreId: i + 1, modePaiement: i % 3 === 0 ? "wave" : "especes", confirmePar: admin1.id, estValide: true });
+      cotisationsData.push({ montant: 3000 + i * 500, evenementId: 2, membreId: i + 1, modePaiement: i % 2 === 0 ? "orange_money" : "especes", confirmePar: admin2.id, estValide: true });
+    }
+    await Cotisation.bulkCreate(cotisationsData);
+    console.log(`Created ${cotisationsData.length} cotisations`);
+
+    const inscriptionsData = [];
+    for (let i = 0; i < 10; i++) {
+      inscriptionsData.push({ evenementId: 1, membreId: i + 1, estPresent: i % 3 === 0, donneesJson: JSON.stringify({ nom: membres[i].prenom + " " + membres[i].nom, telephone: membres[i].telephone }) });
+      inscriptionsData.push({ evenementId: 2, membreId: i + 1, estPresent: false, donneesJson: JSON.stringify({ nom: membres[i].prenom + " " + membres[i].nom, telephone: membres[i].telephone }) });
+    }
+    await Inscription.bulkCreate(inscriptionsData);
+    console.log(`Created ${inscriptionsData.length} inscriptions`);
+
+    const typesCotisation = await TypeCotisation.bulkCreate([
+      { nom: "Caisse sociale", description: "Cotisation mensuelle caisse sociale", periodicite: "mensuel", montant: 5000, userId: admin1.id },
+      { nom: "Barkelou", description: "Cotisation annuelle barkelou", periodicite: "annuel", montant: 15000, userId: admin1.id },
+      { nom: "Budget mosquee", description: "Participation budget mosquee", periodicite: "mensuel", montant: 2000, userId: admin2.id },
+      { nom: "Fonds d'entraide", description: "Cotisation pour aide aux membres", periodicite: "trimestriel", montant: 10000, userId: admin1.id },
+      { nom: "Voyage spirituel", description: "Pour financer les voyages a Touba", periodicite: "annuel", montant: 25000, userId: admin2.id },
     ]);
-    console.log("Cotisations created");
+    console.log(`Created ${typesCotisation.length} types de cotisation`);
+
+    const paiementsData = [];
+    for (let i = 0; i < 10; i++) {
+      paiementsData.push({ typeCotisationId: 1, membreId: i + 1, montant: 5000, mois: 6, annee: 2026, modePaiement: i % 3 === 0 ? "wave" : "especes", confirmePar: admin1.id });
+      paiementsData.push({ typeCotisationId: 3, membreId: i + 1, montant: 2000, mois: 6, annee: 2026, modePaiement: "orange_money", confirmePar: admin2.id });
+      if (i < 5) {
+        paiementsData.push({ typeCotisationId: 2, membreId: i + 1, montant: 15000, mois: 1, annee: 2026, modePaiement: i === 0 ? "cheque" : "especes", confirmePar: admin1.id });
+      }
+    }
+    await PaiementCotisation.bulkCreate(paiementsData);
+    console.log(`Created ${paiementsData.length} paiements recurrents`);
 
     await Activite.bulkCreate([
-      { userId: 1, action: "Initialisation", details: "Base de donnees initialisee", typeActivite: "system" },
-      { userId: 1, action: "Seed", details: "Donnees de demo inserees", typeActivite: "system" },
+      { action: "Creation dahira", details: "Initialisation de la base de donnees", userId: superAdmin.id },
+      { action: "Seed automatique", details: "Population avec donnees de demonstration", userId: superAdmin.id },
     ]);
-    console.log("Activites created");
 
-    console.log("\n========================================");
-    console.log("  SEED REUSSI !");
-    console.log("========================================");
-    console.log("  Super Admin: superadmin / admin123");
-    console.log("  Admin:       admin1 / admin123");
-    console.log("========================================\n");
+    await Configuration.bulkCreate([
+      { cle: "inscription_membre_debut", valeur: "2026-01-01" },
+      { cle: "inscription_membre_fin", valeur: "2026-12-31" },
+    ]);
+
+    console.log("\n--- Seed complete ---");
+    console.log("Super admin: superadmin / admin123");
+    console.log("Admin: admin1 admin2 / admin123");
+    console.log("Membres: 10, Evenements: 4, Cotisations: 20");
+    console.log("Types cotisation: 5, Paiements recurrents: 25");
 
     process.exit(0);
   } catch (err) {
