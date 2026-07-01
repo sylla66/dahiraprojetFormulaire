@@ -3,6 +3,11 @@ import { auth as authApi } from "../services/api";
 
 const AuthContext = createContext(null);
 
+function enrichUser(u) {
+  if (!u) return null;
+  return { ...u, estAdmin: () => u.role === "admin", estSuperAdmin: () => u.role === "super_admin" };
+}
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -12,7 +17,7 @@ export function AuthProvider({ children }) {
     if (token) {
       authApi
         .me()
-        .then((res) => setUser(res.data))
+        .then((res) => setUser(enrichUser(res.data)))
         .catch(() => localStorage.removeItem("token"))
         .finally(() => setLoading(false));
     } else {
@@ -24,7 +29,7 @@ export function AuthProvider({ children }) {
     const res = await authApi.login({ username, password });
     localStorage.setItem("token", res.data.token);
     localStorage.setItem("user", JSON.stringify(res.data.user));
-    setUser(res.data.user);
+    setUser(enrichUser(res.data.user));
     return res.data;
   };
 

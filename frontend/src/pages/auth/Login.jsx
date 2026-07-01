@@ -17,8 +17,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await login(username, password);
-      navigate(data.user.estSuperAdmin() ? "/super-admin" : "/");
+      await login(username, password);
     } catch (err) {
       setError(err.response?.data?.error || "Erreur de connexion");
     }
