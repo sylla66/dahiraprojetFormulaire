@@ -3,7 +3,7 @@ services:
     name: projetdahiraformulair
     env: node
     region: frankfurt
-    buildCommand: npm install && cd frontend && npm install && npm run build
+    buildCommand: cd backend && npm install && cd ../frontend && npm install && npm run build
     startCommand: node backend/src/server.js
     envVars:
       - key: NODE_VERSION
