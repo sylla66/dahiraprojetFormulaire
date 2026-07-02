@@ -17,6 +17,7 @@ const notificationsRoutes = require("./routes/notifications");
 const exportRoutes = require("./routes/export");
 const backupRoutes = require("./routes/backup");
 const cotisationsRoutes = require("./routes/cotisations");
+const seedRoutes = require("./routes/seed");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -53,6 +54,7 @@ app.use("/api/notifications", notificationsRoutes);
 app.use("/api/export", exportRoutes);
 app.use("/api/backup", backupRoutes);
 app.use("/api/cotisations", cotisationsRoutes);
+app.use("/api/seed", seedRoutes);
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 
