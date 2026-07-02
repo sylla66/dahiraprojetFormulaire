@@ -20,7 +20,11 @@ async function seed() {
         const models = [PaiementCotisation, Cotisation, Inscription, TypeCotisation, Evenement, Formulaire, Membre, User, Activite, Configuration, Localite];
         for (const m of models) await m.destroy({ where: {} });
         if (process.env.DATABASE_URL) {
-          await sequelize.query("ALTER SEQUENCE \"Users_id_seq\" RESTART WITH 1");
+          const tables = await sequelize.query("SELECT tablename FROM pg_tables WHERE schemaname = 'public'", { type: sequelize.QueryTypes.SELECT });
+          for (const t of tables) {
+            const tableName = t.tablename;
+            await sequelize.query(`ALTER SEQUENCE IF EXISTS "${tableName}_id_seq" RESTART WITH 1`);
+          }
         } else {
           await sequelize.query("DELETE FROM sqlite_sequence");
         }
