@@ -9,6 +9,7 @@ export default function Layout() {
   const [nbNonLues, setNbNonLues] = useState(0);
   const [notifList, setNotifList] = useState([]);
   const [showNotifs, setShowNotifs] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const loadNonLues = useCallback(async () => {
     try {
@@ -49,6 +50,13 @@ export default function Layout() {
     return () => clearInterval(interval);
   }, [loadNonLues]);
 
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 8);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -56,17 +64,24 @@ export default function Layout() {
 
   return (
     <div className="app-shell">
-      <nav className="navbar navbar-expand-lg navbar-dark app-navbar shadow-sm">
+      <nav className={`navbar navbar-expand-lg app-navbar shadow-sm ${isScrolled ? "navbar-scrolled" : ""}`}>
         <div className="container-fluid px-3 px-lg-4">
-          <Link className="navbar-brand fw-semibold d-flex align-items-center gap-2" to="/">
-            <span className="brand-icon"><i className="bi bi-calendar-event"></i></span>
-            Dahira Gestion
+          <Link className="navbar-brand d-flex align-items-center gap-2 me-3 me-lg-4" to="/">
+            <span className="brand-icon">
+              <i className="bi bi-calendar2-week-fill"></i>
+            </span>
+            <span className="brand-text">
+              <span className="brand-title">Dahira Gestion</span>
+              <span className="brand-subtitle">Plateforme moderne</span>
+            </span>
           </Link>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
+
           <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav me-auto">
+            <ul className="navbar-nav me-auto align-items-lg-center gap-lg-1">
               <li className="nav-item">
                 <Link className="nav-link" to={user?.estSuperAdmin() ? "/super-admin" : "/"}>
                   <i className="bi bi-speedometer2"></i> Tableau de bord
@@ -133,10 +148,14 @@ export default function Layout() {
                 </>
               )}
             </ul>
-            <ul className="navbar-nav">
+
+            <ul className="navbar-nav align-items-lg-center gap-2 mt-3 mt-lg-0">
               <li className="nav-item">
-                <a className="nav-link position-relative" href="#" role="button" onClick={toggleNotifs}>
-                  <i className="bi bi-bell" style={{ fontSize: "1.2rem" }}></i>
+                <a className="nav-link nav-link-action position-relative" href="#" role="button" onClick={toggleNotifs}>
+                  <span className="nav-action-icon">
+                    <i className="bi bi-bell-fill"></i>
+                  </span>
+                  <span className="d-none d-sm-inline">Notifications</span>
                   {nbNonLues > 0 && (
                     <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{ fontSize: "0.6rem" }}>
                       {nbNonLues > 99 ? "99+" : nbNonLues}
@@ -145,8 +164,12 @@ export default function Layout() {
                 </a>
               </li>
               <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                  <i className="bi bi-person-circle"></i> {user?.prenom} {user?.nom}
+                <a className="nav-link nav-link-action user-pill dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                  <span className="user-avatar">{(user?.prenom?.[0] || "U").toUpperCase()}</span>
+                  <span className="d-none d-lg-inline">
+                    <span className="user-name">{user?.prenom} {user?.nom}</span>
+                    <span className="user-role">{user?.estSuperAdmin() ? "Super Admin" : "Admin"}</span>
+                  </span>
                 </a>
                 <ul className="dropdown-menu dropdown-menu-end">
                   <li className="dropdown-header text-muted">

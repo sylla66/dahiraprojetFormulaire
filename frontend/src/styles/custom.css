@@ -18,17 +18,202 @@ body {
 }
 
 .app-navbar {
-  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 55%, #3b82f6 100%) !important;
-  border-bottom: 1px solid rgba(255,255,255,0.14);
+  background: linear-gradient(135deg, rgba(9, 30, 77, 0.98) 0%, rgba(29, 78, 216, 0.96) 50%, rgba(59, 130, 246, 0.96) 100%) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.16);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.18);
+  position: sticky;
+  top: 0;
+  z-index: 1040;
 }
 
-.navbar-brand .brand-icon {
+.app-navbar .navbar-brand {
+  padding: 0.25rem 0;
+}
+
+.app-navbar .brand-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.28), rgba(255,255,255,0.14));
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.2);
+  font-size: 1.1rem;
+}
+
+.app-navbar .brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+
+.app-navbar .brand-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.app-navbar .brand-subtitle {
+  font-size: 0.72rem;
+  opacity: 0.82;
+  font-weight: 600;
+}
+
+.app-navbar .navbar-toggler {
+  border: 0;
+  padding: 0.35rem 0.45rem;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.12);
+}
+
+.app-navbar .navbar-toggler:focus {
+  box-shadow: none;
+}
+
+.app-navbar .navbar-collapse {
+  transition: all 0.2s ease;
+}
+
+.app-navbar .nav-link {
+  color: rgba(255,255,255,0.96) !important;
+  border-radius: 12px;
+  padding: 0.65rem 0.8rem;
+  transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-navbar .nav-link:hover,
+.app-navbar .nav-link:focus,
+.app-navbar .nav-link.show {
+  background: rgba(255,255,255,0.14);
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
+.app-navbar .nav-link::after {
+  display: none;
+}
+
+.app-navbar .nav-link-action {
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.14);
+  position: relative;
+  overflow: hidden;
+}
+
+.app-navbar .nav-link-action::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.16), transparent);
+  transform: translateX(-120%);
+  transition: transform 0.45s ease;
+}
+
+.app-navbar .nav-link-action:hover::before {
+  transform: translateX(120%);
+}
+
+.app-navbar .navbar-scrolled {
+  background: rgba(7, 24, 63, 0.8) !important;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.22);
+}
+
+.app-navbar .brand-icon {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.app-navbar .navbar-brand:hover .brand-icon {
+  transform: rotate(-6deg) scale(1.05);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.28);
+}
+
+.app-navbar .nav-action-icon {
   display: inline-grid;
   place-items: center;
   width: 36px;
   height: 36px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.16);
+}
+
+.app-navbar .user-pill {
+  min-width: 0;
+}
+
+.app-navbar .user-avatar {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fde68a, #f59e0b);
+  color: #0f172a;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+}
+
+.app-navbar .user-name {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.app-navbar .user-role {
+  display: block;
+  font-size: 0.72rem;
+  opacity: 0.82;
+}
+
+.app-navbar .dropdown-menu {
+  border: none;
+  border-radius: 15px;
+  padding: 0.45rem;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
+  margin-top: 0.6rem;
+}
+
+.app-navbar .dropdown-item {
   border-radius: 10px;
-  background: rgba(255,255,255,0.18);
+  padding: 0.65rem 0.8rem;
+}
+
+.app-navbar .dropdown-item:hover {
+  background: #eef4ff;
+  color: #1d4ed8;
+}
+
+@media (max-width: 991.98px) {
+  .app-navbar .navbar-collapse {
+    margin-top: 0.75rem;
+    padding: 0.9rem;
+    border-radius: 18px;
+    background: rgba(8, 30, 77, 0.96);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.16);
+  }
+
+  .app-navbar .navbar-nav {
+    gap: 0.25rem;
+  }
+
+  .app-navbar .nav-link {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .app-navbar .user-pill {
+    justify-content: flex-start;
+    padding: 0.75rem 0.85rem;
+  }
+
+  .app-navbar .user-avatar {
+    margin-right: 0.65rem;
+  }
 }
 
 .app-content {
